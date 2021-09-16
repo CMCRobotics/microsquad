@@ -24,7 +24,7 @@ RUN  mv ./public/conf ./dist/
 # IMPORTANT : The upstream image defines /etc/lighttpd as a volume.
 #             This prevents any modifications to be brought to the image's files
 #             under /etc/lighttpd.
-FROM nginx:stable-alpine
+FROM nginx:1-alpine
 
 RUN apk update
 
