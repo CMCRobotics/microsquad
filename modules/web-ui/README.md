@@ -32,3 +32,9 @@ oc process -p NAMESPACE=microsquad -f deployment/service.yml --local=true | oc a
   docker run -it --rm --name usquad -e NGINX_PORT=8080 -e NGINX_CONTEXT_PATH=/ui -v `pwd`/deployment/conf/nginx/templates:/etc/nginx/templates -p 8080:8080 usquad
   ```
 * Access the server from your web browser at http://localhost:8080/ui
+
+## How to produce a SBOM for the Python gateway
+```
+cyclonedx-py -r -rf ./requirements.txt -o - --format json
+
+```
