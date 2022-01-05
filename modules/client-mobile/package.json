@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "buefy": "^0.9.14"
+    "@vue/cli": "^4.5.15",
+    "buefy": "^0.9.14",
+    "material-design-icons": "^3.0.1"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
