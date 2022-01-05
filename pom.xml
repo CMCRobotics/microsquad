@@ -85,7 +85,8 @@
       </plugins>
     </build>
 
-	<modules>
-	  <!-- <module>modules/gateway</module> -->
-	</modules>
+  <modules>
+    <module>modules/client-mobile</module>
+    <module>modules/web-ui</module>
+  </modules>
 </project>
