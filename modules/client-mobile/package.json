@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "buefy": "^0.9.14"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --port 8000 --config webpack.dev.js"
+  }
+}
