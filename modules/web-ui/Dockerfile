@@ -21,7 +21,7 @@ RUN npm run build
 RUN  mv ./public/assets ./dist/
 RUN  mv ./public/conf ./dist/
 
-FROM nginx:stable-alpine
+FROM nginx:1.21-alpine
 
 RUN apk update
 
