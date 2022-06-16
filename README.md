@@ -45,6 +45,8 @@ protocol mqtt
 
 listener 9001
 protocol websockets 
+
+allow_anonymous true
 ```
 For a more comprehensive example, consult ``docs/samples/mosquitto.conf``.
 
