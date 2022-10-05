@@ -1,6 +1,6 @@
 # MicroSquad (a.k.a uSquad)
 
-[![Known Vulnerabilities](https://snyk.io/test/github/cmcrobotics/usquad-web-ui/badge.svg)](https://snyk.io/test/github/lucasvanmol/usquad-web-ui)
+[![Known Vulnerabilities](https://snyk.io/test/github/cmcrobotics/usquad-web-ui/badge.svg)](https://snyk.io/test/github/cmcrobotics/usquad-web-ui)
 ![Build](https://github.com/cmcrobotics/microsquad/workflows/build-action/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lucasvanmol_usquad-web-ui&metric=alert_status)](https://sonarcloud.io/dashboard?id=lucasvanmol_usquad-web-ui)
 
