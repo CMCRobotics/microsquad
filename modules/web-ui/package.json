@@ -10,7 +10,7 @@
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.1.1",
     "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^6.3.0",
+    "css-loader": "^6.7.1",
     "dotenv-webpack": "^6.0.4",
     "express": "^4.17.1",
     "html-webpack-plugin": "^4.5.2",
