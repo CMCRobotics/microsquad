@@ -58,7 +58,7 @@ jobs:
                 push: true
                 tags: ghcr.io/cmcrobotics/microsquad/web-ui:latest
             
-            - name: Push Web UI container to GHCR
+            - name: Push Gateway container to GHCR
               uses: docker/build-push-action@v3
               with:
                 context: ./modules/gateway
