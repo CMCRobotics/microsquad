@@ -4,6 +4,8 @@
       "module": "commonjs",
       "sourceMap": true,
       "declaration": true,
+      "declarationDir": "dist/types",
+      "allowSyntheticDefaultImports": true,
       "outDir": "./dist/lib",
       "strict": true,
       "typeRoots": [
