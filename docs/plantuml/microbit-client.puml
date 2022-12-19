@@ -1,0 +1,22 @@
+@startuml Microbit Client
+
+queue "Broker" as broker
+control "Gateway" as gateway
+actor "Player" as player
+actor "Microbit Terminal" as microbit
+
+activate player
+activate gateway
+
+player -> microbit : Turn on
+
+activate microbit
+
+microbit -> gateway : bonjour
+gateway -> microbit : bonjour
+
+loop For ever
+  
+end
+
+@enduml
