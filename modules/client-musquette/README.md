@@ -1,10 +1,4 @@
-# Typescript Library Starter
-
-![NPM](https://img.shields.io/npm/l/@gjuchault/typescript-library-starter)
-![NPM](https://img.shields.io/npm/v/@gjuchault/typescript-library-starter)
-![GitHub Workflow Status](https://github.com/gjuchault/typescript-library-starter/actions/workflows/typescript-library-starter.yml/badge.svg?branch=main)
-
-Yet another (opinionated) typescript library starter template.
+# Microsquad Client Library (Musquette implementation)
 
 ## Opinions and limitations
 
@@ -12,13 +6,7 @@ Yet another (opinionated) typescript library starter template.
 2. Only rely on GitHub Actions
 3. Do not include documentation generation
 
-## Getting started
-
-1. `npx degit gjuchault/typescript-library-starter my-project` or click on `Use this template` button on GitHub!
-2. `cd my-project`
-3. `npm install`
-4. `git init` (if you used degit)
-5. `npm run setup`
+## Development
 
 To enable deployment, you will need to:
 
