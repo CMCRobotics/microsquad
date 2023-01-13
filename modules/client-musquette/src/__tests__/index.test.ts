@@ -1,4 +1,4 @@
-import { describe, expect, it, afterAll } from "vitest";
+import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { foobar } from "../index";
 import { of,from } from 'rxjs';
 
@@ -6,9 +6,12 @@ const aedes = require('aedes')()
 const httpServer = require('http').createServer()
 const ws = require('websocket-stream')
 const port = 8888
-httpServer.listen(port, function () {
-  console.log('websocket server listening on port ', port)
-})
+
+beforeAll(() => {
+  httpServer.listen(port, function () {
+    console.log('Aedes websocket server listening on port ', port)
+  })
+});
 
 afterAll(() => {
   httpServer.close();
@@ -31,6 +34,7 @@ describe("foobar()", () => {
       it("checks that hello is received", () => {
           of('hello').subscribe( data => {
           expect(data).toBe('hello');
+          console.log('All good in RXJS ')
         });
       });
     });
