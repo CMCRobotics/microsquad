@@ -22,7 +22,7 @@
     "src/lib/**/*"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --module commonjs",
     "test": "jest --config jestconfig.json --detectOpenHandles"
   },
   "keywords": [

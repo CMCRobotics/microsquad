@@ -1,0 +1,32 @@
+{
+  "name": "usquad-scene",
+  "version": "0.1.0",
+  "description": "A Scene manager for Microsquad",
+  "main": "src/js/main.js",
+  "engines": {
+    "node": "14.15.4"
+  },
+  "repository": "github:cmcrobotics/microsquad",
+  "dependencies": {
+    "@enable3d/ammo-physics": "^0.25.3",
+    "@enable3d/three-graphics": "^0.25.3",
+    "@types/matter-js": "0.17.6",
+    "@types/three": "0.144.0",
+    "@yandeu/audio": "^0.0.2",
+    "enable3d": "^0.25.1",
+    "five-server": "^0.1.7",
+    "matter-js": "0.17.1",
+    "poly-decomp": "^0.3.0",
+    "three": "0.144.0",
+    "three-csg-ts": "^3.1.10"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.11.2"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack-dev-server --port 8000 --config webpack.dev.js"
+  },
+  "author": "Brice Copy",
+  "license": "LGPL-3.0-only"
+}

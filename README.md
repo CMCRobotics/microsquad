@@ -59,4 +59,10 @@ From ```modules/gateway```, execute :
 . ./setup-venv.sh
 python -m microsquad.gateway.mqtt
 ```
+## Start the Web UI
 
+From ```modules/web-ui```, execute :
+```bash
+. source-path.sh
+npm run serve
+```
