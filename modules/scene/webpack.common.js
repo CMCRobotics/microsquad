@@ -8,7 +8,7 @@ module.exports = {
     entry: "./src/js/main.js", 
     output: {
         publicPath: "/",
-        filename: "js/bundle.js",
+        filename: "bundle.js",
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
