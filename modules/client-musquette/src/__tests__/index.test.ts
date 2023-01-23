@@ -1,3 +1,4 @@
+import { MQTTSubject } from 'musquette'
 import { describe, expect, it, beforeAll, afterAll } from "vitest";
 import { foobar } from "../index";
 import { of,from } from 'rxjs';
@@ -37,6 +38,10 @@ describe("foobar()", () => {
           console.log('All good in RXJS ')
         });
       });
-    });
+
+      it("checks that an MQTT subject can be declared", () => {
+         let mqtt = new MQTTSubject(`ws://localhost:9001`);
+        });
+      });
   });
 });
