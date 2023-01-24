@@ -39,11 +39,11 @@ class MainScene extends Scene3D {
     // green sphere
     const geometry = new THREE.SphereGeometry(0.8, 16, 16)
     const material = new THREE.MeshLambertMaterial({ color: 0x00ff00 })
-    const cube = new THREE.Mesh(geometry, material)
-    cube.position.set(0.2, 3, 0)
-    this.scene.add(cube)
+    const sphere = new THREE.Mesh(geometry, material)
+    sphere.position.set(0.2, 3, 0)
+    this.scene.add(sphere)
     // add physics to an existing object
-    this.physics.add.existing(cube as any)
+    this.physics.add.existing(sphere as any)
   }
 
   update() {
