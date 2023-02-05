@@ -137,3 +137,4 @@ modules/gateway/src/main/python/microsquad/portscan.cache
 # ignore virtual environments
 **/*-venv/*
 node/
+node_modules/
