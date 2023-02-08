@@ -28,7 +28,7 @@ For the **MicroSquad** Gateway :
 * [https://github.com/AdventuresInMinecraft/Bitio](https://github.com/AdventuresInMinecraft/bitio)
 
 For the **MicroSquad** clients :
-* The provided **uSquad** firmware to upload on each Microbit.
+* The provided **MicroSquad** firmware to upload on each Microbit. For instance [microsquad.hex](https://github.com/CMCRobotics/microsquad/releases/download/v1.0.microsquad.mpy/microsquad.hex)
 
 For the **MicroSquad** Web Interface :
 * The spectacular [Kenney Character Assets](https://kenney.itch.io/kenney-character-assets) under Creative Commons Zero
@@ -38,7 +38,7 @@ For the **MicroSquad** Web Interface :
 ## Flash the Microbits
 
 * The Microbit Gateway uses [https://github.com/AdventuresInMinecraft/Bitio](https://github.com/AdventuresInMinecraft/bitio) - Simply download the latest compatible firmware and copy it to the Microbit flash drive to load it as the new firmware.
-* The client firmware is available as a Github release.
+* The client firmware is available as a Github release. For instance [microsquad.hex](https://github.com/CMCRobotics/microsquad/releases/download/v1.0.microsquad.mpy/microsquad.hex)
 
 ## Configure and start Mosquitto MQTT broker
 
