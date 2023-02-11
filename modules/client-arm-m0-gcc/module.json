@@ -1,8 +1,8 @@
 {
-  "name": "microbit-samples",
-  "version": "2.1.1",
-  "description": "The micro:bit runtime common abstraction with examples.",
-  "license": "MIT",
+  "name": "microsquad-arm0",
+  "version": "1.0.0",
+  "description": "A MicroSquad client for Microbit v1",
+  "license": "GPLv3",
   "dependencies": {
     "microbit": "lancaster-university/microbit#v2.1.1"
   },
