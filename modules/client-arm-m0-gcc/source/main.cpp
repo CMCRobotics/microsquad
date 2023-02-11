@@ -5,6 +5,7 @@
  * @date 2023-02-11
  */
 #include "MicroBit.h"
+#include "inc/images.h"
 
 MicroBit    uBit;
 
@@ -13,6 +14,8 @@ int main()
     // Initialise the micro:bit runtime.
     uBit.init();
     uBit.radio.enable();
+    MicroBitImage angry_image((ImageData*)IMAGES::T_ANGRY);
+    uBit.display.print(angry_image);
 
     while(1)
     {
