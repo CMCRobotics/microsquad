@@ -2,6 +2,7 @@ import { Project, Scene3D, PhysicsLoader, THREE, ExtendedObject3D } from 'enable
 
 class MainScene extends Scene3D {
   box!: ExtendedObject3D
+  ground!: ExtendedObject3D
 
   constructor() {
     super({ key: 'MainScene' })
@@ -18,20 +19,24 @@ class MainScene extends Scene3D {
     console.log('preload')
   }
 
-  create() {
+  async create() {
     console.log('create')
-
+    
     // set up scene (light, ground, grid, sky, orbitControls)
-    this.warpSpeed()
+    this.warpSpeed('-ground')
 
     // enable physics debug
     this.physics.debug?.enable()
 
     // position camera
     this.camera.position.set(10, 10, 20)
+    this.camera.lookAt(0, 5, 0)
 
     // blue box
     this.box = this.add.box({ y: 2 }, { lambert: { color: 'deepskyblue' } })
+
+    this.ground = this.physics.add.box({x:-0.5,y:-0.5, width:40,depth:40, height:0.3, collisionFlags:1, })
+
 
     // pink box
     this.physics.add.box({ y: 10 }, { lambert: { color: 'hotpink' } })
