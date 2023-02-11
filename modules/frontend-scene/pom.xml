@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>microsquad-scene</artifactId>
+    <artifactId>frontend-scene</artifactId>
     <packaging>jar</packaging>
 	
     <name>Microsquad :: Scene manager frontend</name>
