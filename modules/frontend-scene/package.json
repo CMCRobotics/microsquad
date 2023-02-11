@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "LGPLv3",
+  "license": "GPLv3",
   "dependencies": {
     "enable3d": "~0.25.0"
   },
