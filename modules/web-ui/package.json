@@ -10,7 +10,7 @@
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.1.1",
     "express": "^4.17.1",
-    "css-loader": "^6.3.0",
+    "css-loader": "^6.7.3",
     "paho-mqtt": "^1.1.0",
     "rxjs": "^7.3.0",
     "style-loader": "^3.3.0",
