@@ -1,7 +1,6 @@
-// import { MicrosquadClient } from '../lib/client';
 
 import { of,from } from 'rxjs';
-import {afterAll, expect, test} from '@jest/globals';
+// import {afterAll, expect, test} from '@jest/global';
 
 import { MicrosquadClient } from '../main/ts/app';
 
