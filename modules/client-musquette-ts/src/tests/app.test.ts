@@ -58,7 +58,7 @@ test('client subscribe ok', done => {
   // });
 
 
-  let mqtt = new MQTTSubject(`ws://localhost:8888`)
+  let mqtt = new MQTTSubject<string>(`ws://localhost:8888`)
   expect(4).toBe(4);
   done();
 });
