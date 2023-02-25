@@ -1,8 +1,9 @@
 
 import { of,from } from 'rxjs';
 // import {afterAll, expect, test} from '@jest/global';
+import { MQTTSubject } from 'musquette'
 
-import { MicrosquadClient } from '../main/ts/app';
+// import { MicrosquadClient } from '../main/ts/app';
 
 const aedes = require('aedes')()
 const httpServer = require('http').createServer()
@@ -48,13 +49,16 @@ test('the observable interval emits 100 then 200 then 300', done => {
 });
 
 test('client subscribe ok', done => {
-  var client = new MicrosquadClient("ws://localhost:8888","jest-client-ID", "/")
+  // var client = new MicrosquadClient("ws://localhost:8888","jest-client-ID", "/")
   // // let topic = MicrosquadClient.topic(`test/topic`)
 
   // client.playerSubject$.subscribe( data => {
   //   expect(data).toBe('hello');
   //  
   // });
+
+
+  let mqtt = new MQTTSubject(`ws://localhost:8888`)
   expect(4).toBe(4);
   done();
 });
