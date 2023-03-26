@@ -71,23 +71,49 @@ void lp_parse(const char* input, LineProtocolRecord& output) {
     output.timestamp = timestamp / 1000;
 }
 
-char* lp_get_field(LineProtocolRecord& record, const char* field_name) {
+char* lp_get_tag(LineProtocolRecord& record, const char* tag_name) {
+    // Find the position of the field name in the fields string
+    char* tag_pos = strstr(record.tags, tag_name);
+    
+    if (tag_pos == NULL) {
+        // Tag name not found
+        return NULL;
+    }
+    
+    // Check if the next character after the tag name is the equals sign
+    if (*(tag_pos + strlen(tag_name)) != '=') {
+        // Tag name is part of a tag value
+        return NULL;
+    }
+    
+    // Find the position of the field value after the equals sign
+    char* value_pos = tag_pos + strlen(tag_name) + 1;
+    
+    // Find the position of the next comma or the end of the fields string
+    char* next_pos = strchr(value_pos, ',');
+    if (next_pos == NULL) {
+        next_pos = record.tags + strlen(record.tags);
+    }
+    
+    // Allocate memory for the tag value and copy it from the tags string
+    char* value = new char[next_pos - value_pos + 1];
+    strncpy(value, value_pos, next_pos - value_pos);
+    value[next_pos - value_pos] = '\0';
+    
+    return value;
+}
+
+float lp_get_field(LineProtocolRecord& record, const char* field_name) {
     // Find the position of the field name in the fields string
     char* field_pos = strstr(record.fields, field_name);
     
     if (field_pos == NULL) {
         // Field name not found
-        return NULL;
+        return NAN;
     }
     
-    // Check if the next character after the field name is the equals sign
-    if (*(field_pos + strlen(field_name)) != '=') {
-        // Field name is part of a field value
-        return NULL;
-    }
-    
-    // Find the position of the field value after the equals sign
-    char* value_pos = field_pos + strlen(field_name) + 1;
+    // Find the position of the field value after the field name
+    char* value_pos = strchr(field_pos, '=') + 1;
     
     // Find the position of the next comma or the end of the fields string
     char* next_pos = strchr(value_pos, ',');
@@ -100,8 +126,14 @@ char* lp_get_field(LineProtocolRecord& record, const char* field_name) {
     strncpy(value, value_pos, next_pos - value_pos);
     value[next_pos - value_pos] = '\0';
     
-    return value;
+    // Convert the value to a float and return it
+    float field_value = atof(value);
+    
+    delete[] value;
+    
+    return field_value;
 }
+
 
 
 int main()
