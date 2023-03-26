@@ -23,7 +23,7 @@ struct LineProtocolRecord {
 
 
 
-void parse_line_protocol(const char* input, LineProtocolRecord& output) {
+void lp_parse(const char* input, LineProtocolRecord& output) {
     // Parse the input string and extract the measurement, tags, fields, and timestamp
     char measurement[256];
     char tags[1024];
@@ -71,6 +71,38 @@ void parse_line_protocol(const char* input, LineProtocolRecord& output) {
     output.timestamp = timestamp / 1000;
 }
 
+char* lp_get_field(LineProtocolRecord& record, const char* field_name) {
+    // Find the position of the field name in the fields string
+    char* field_pos = strstr(record.fields, field_name);
+    
+    if (field_pos == NULL) {
+        // Field name not found
+        return NULL;
+    }
+    
+    // Check if the next character after the field name is the equals sign
+    if (*(field_pos + strlen(field_name)) != '=') {
+        // Field name is part of a field value
+        return NULL;
+    }
+    
+    // Find the position of the field value after the equals sign
+    char* value_pos = field_pos + strlen(field_name) + 1;
+    
+    // Find the position of the next comma or the end of the fields string
+    char* next_pos = strchr(value_pos, ',');
+    if (next_pos == NULL) {
+        next_pos = record.fields + strlen(record.fields);
+    }
+    
+    // Allocate memory for the field value and copy it from the fields string
+    char* value = new char[next_pos - value_pos + 1];
+    strncpy(value, value_pos, next_pos - value_pos);
+    value[next_pos - value_pos] = '\0';
+    
+    return value;
+}
+
 
 int main()
 {
@@ -89,12 +121,12 @@ int main()
     //     uBit.sleep(100);
     // }
 
-    // struct LineProtocolRecord lpr;
-    // parse_line_protocol("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
+     struct LineProtocolRecord lpr;
+     lp_parse("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
 // 
     ManagedString meas("Measure :");
-    // ManagedString m(lpr.measurement);
-    // meas = meas + m;
+    ManagedString m(lpr.measurement);
+    meas = meas + m;
     uBit.display.scroll(meas);
 }
 
