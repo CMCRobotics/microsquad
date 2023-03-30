@@ -11,6 +11,8 @@
 
 MicroBit    uBit;
 
+// Radio message buffer
+char message_buffer[256];
 
 struct LineProtocolRecord {
     char* measurement;        // Name of the measurement
@@ -134,32 +136,61 @@ float lp_get_field(LineProtocolRecord& record, const char* field_name) {
     return field_value;
 }
 
+// Event handler for incoming radio messages
+void onRadioDatagramReceived(MicroBitEvent) {
+    // Receive the radio message
+    uBit.radio.datagram.recv(message_buffer, sizeof(message_buffer));
+    
+    // Parse the message into a LineProtocolRecord
+    record = parseLineProtocolRecord(message_buffer);
+    
+    // Signal to the main loop that a new message has been received
+    new_message_received = true;
+}
 
+// int main() {
+//     // Initialize the MicroBit
+//     uBit.init();
+    
+//     // Enable the radio
+//     uBit.radio.enable();
+    
+//     // Register the event handler for incoming radio messages
+//     uBit.messageBus.listen(MICROBIT_ID_RADIO, MICROBIT_RADIO_EVT_DATAGRAM, onRadioDatagramReceived);
+    
+    
+//     // We should never get here, but just in case...
+//     return 0;
+// }
 
 int main()
 {
     // Initialise the micro:bit runtime.
     uBit.init();
     uBit.radio.enable();
+    uBit.messageBus.listen(MICROBIT_ID_RADIO, MICROBIT_RADIO_EVT_DATAGRAM, onRadioDatagramReceived);
+    
+    while (1) {
+        // Check if a new message has been received
+        if (new_message_received) {
+            // Print the values of the fields in the record
+            // printFields(record);
+            
+            // Reset the flag
+            new_message_received = false;
+        }
+        
+        // Yield to other fibers
+        fiber_sleep(1);
+    }
 
-    // while(1)
-    // {
-    //     if (uBit.buttonA.isPressed())
-    //         uBit.radio.datagram.send("1");
-
-    //     else if (uBit.buttonB.isPressed())
-    //         uBit.radio.datagram.send("2");
-
-    //     uBit.sleep(100);
-    // }
-
-     struct LineProtocolRecord lpr;
-     lp_parse("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
-// 
-    ManagedString meas("Measure :");
-    ManagedString m(lpr.measurement);
-    meas = meas + m;
-    uBit.display.scroll(meas);
+//      struct LineProtocolRecord lpr;
+//      lp_parse("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
+// // 
+//     ManagedString meas("Measure :");
+//     ManagedString m(lpr.measurement);
+//     meas = meas + m;
+//     uBit.display.scroll(meas);
 }
 
 
