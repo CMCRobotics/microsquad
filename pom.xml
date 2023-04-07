@@ -34,7 +34,7 @@
 
     <properties>
       <node.version>v16.19.0</node.version>
-      <pnpm.version>v7.13.0</pnpm.version>
+      <npm.version>8.19.3</npm.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -56,22 +56,22 @@
                   <execution>
                       <id>install node and npm</id>
                       <goals>
-                          <goal>install-node-and-pnpm</goal>
+                          <goal>install-node-and-npm</goal>
                       </goals>
                   </execution>
                   <execution>
-                      <id>pnpm install</id>
+                      <id>npm install</id>
                       <goals>
-                          <goal>pnpm</goal>
+                          <goal>npm</goal>
                       </goals>
                   </execution>
                   <execution>
                       <id>npm run build</id>
                       <goals>
-                          <goal>pnpm</goal>
+                          <goal>npm</goal>
                       </goals>
                       <configuration>
-                          <arguments>build</arguments>
+                          <arguments>run build</arguments>
                       </configuration>
                   </execution>
               </executions>
