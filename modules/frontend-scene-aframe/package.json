@@ -15,7 +15,8 @@
   "license": "GPLv3",
   "dependencies": {
     "aframe": "^1.4.1",
-    "aframe-extras": "^6.1.1"
+    "aframe-extras": "^6.1.1",
+    "aframe-layout-component": "^5.3.0"
   },
   "devDependencies": {
     "@types/aframe": "^1.2.2",
