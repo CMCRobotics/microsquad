@@ -20,6 +20,10 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
+  externals: {                                                                  
+    // Stubs out `import ... from 'three'` so it returns `import ... from window.THREE` effectively using THREE global variable that is defined by AFRAME.
+    three: "THREE",                                                             
+  },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'www')

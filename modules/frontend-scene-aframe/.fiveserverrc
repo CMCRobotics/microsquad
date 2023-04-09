@@ -1,4 +1,6 @@
 {
   "port": 8085,
-  "root": "www"
+  "root": "www",
+  "debugVSCode": true,
+  "injectBody": true
 }
