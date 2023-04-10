@@ -7,4 +7,5 @@ require('aframe-htmlembed-component')
 require('three')
 
 require('./textureMap')
-require('./lookAt')
+require('./lookTowards')
+require('./faceTarget')
