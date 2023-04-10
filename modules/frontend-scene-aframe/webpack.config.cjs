@@ -21,7 +21,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js']
   },
   externals: {                                                                  
-    // Stubs out `import ... from 'three'` so it returns `import ... from window.THREE` effectively using THREE global variable that is defined by AFRAME.
+    // Stubs out `import ... from 'three'`
+    // so it returns `import ... from window.THREE` 
+    // effectively using THREE global variable that is defined by AFRAME.
+    // This is useful to integrate other Three dependencies
     three: "THREE",                                                             
   },
   output: {
