@@ -5,14 +5,14 @@
     <parent>
         <groupId>com.github.cmcrobotics.microsquad</groupId>
         <artifactId>reactor</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0-aframe-client-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>client-mobile</artifactId>
     <packaging>jar</packaging>
 	
-    <name>Microsquad :: Mobile Client</name>
+    <name>Microsquad :: AFrame-based Mobile Client</name>
     <description>${project.name}</description>
 	
     <build>
