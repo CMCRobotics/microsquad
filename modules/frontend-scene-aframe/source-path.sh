@@ -1,1 +1,1 @@
-export PATH=`pwd`/../../node:`pwd`/src:$PATH
+export PATH=`pwd`/../../node:`pwd`/node_modules/.bin:`pwd`/src:$PATH
