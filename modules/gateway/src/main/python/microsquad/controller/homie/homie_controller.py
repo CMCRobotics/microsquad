@@ -69,7 +69,6 @@ class HomieController():
 
         if(node.name.startswith("player-") ):
             if(property == "terminal-id" and value not in self._known_players):
-                self._known_games.append(value)
                 if(self.event_source is not None):
                     logger.debug(f"New player discovered : {value}")
                     self.event_source.on_next(MicroSquadEvent(EventType.PLAYER_DISCOVERED,payload=value))

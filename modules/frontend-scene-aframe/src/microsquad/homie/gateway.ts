@@ -3,12 +3,12 @@ import { HOMIE_TYPE_STRING, HomieDeviceAtrributes, HomieDeviceMode, MQTTConnectO
 import { RxMqtt } from "node-homie/mqtt";
 
 /**
- * A MicroSquad Device Gateway class.
+ * A Homie Device class for the MicroSquad Gateway.
  * It exposes the following nodes :
  *   * scoreboard
  *   * game
  * 
- * Also centralizes terminal and game management methods, and emits MicroSquad events.
+ * Also centralizes terminal and game management methods, and corresponding emits MicroSquad events.
  * 
  * 
  * @see MicroSquadEvent
@@ -36,3 +36,5 @@ export class DeviceGateway extends HomieDevice{
         this.gameNode.add(new HomieProperty(this.gameNode, {id: 'broadcast',name: 'Broadcast',datatype: HOMIE_TYPE_STRING}))
     }
 }
+
+

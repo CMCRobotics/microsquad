@@ -139,3 +139,4 @@ modules/gateway/src/main/python/microsquad/portscan.cache
 node/
 node_modules/
 pnpm-lock.yaml
+modules/client-mobile/www/bundle.js

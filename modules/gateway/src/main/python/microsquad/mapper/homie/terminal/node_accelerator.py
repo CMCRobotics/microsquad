@@ -10,7 +10,7 @@ class NodeAccelerator(Node_Base):
     def __init__(
         self,
         device,
-        id = "accel",
+        id = "accelerator",
         name = "Accelerator",
         type_="accelerator",
         retain=True,
@@ -18,9 +18,9 @@ class NodeAccelerator(Node_Base):
     ):
       super().__init__(device, id, name, type_, retain, qos)
 
-      self.add_property(Property_Integer(self, id="x", name="x", settable=False))
-      self.add_property(Property_Integer(self, id="y", name="y", settable=False))
-      self.add_property(Property_Integer(self, id="z", name="z", settable=False))
+      self.add_property(Property_Integer(self, id="x", name="X", settable=False))
+      self.add_property(Property_Integer(self, id="y", name="Y", settable=False))
+      self.add_property(Property_Integer(self, id="z", name="Z", settable=False))
       self.add_property(Property_String(self, id="value", name="Value", settable=False))
        
 

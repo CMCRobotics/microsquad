@@ -5,14 +5,14 @@ from homie.node.node_base import Node_Base
 
 logger = logging.getLogger(__name__)
 
-class NodeTemperature(Node_Base):
+class NodeEnvironment(Node_Base):
     def __init__(
         self,
         device,
-        id = "temperature",
-        name = "Temperature",
+        id = "environment",
+        name = "Environment",
         temp_units="C",
-        type_="temperature",
+        type_="environment",
         retain=True,
         qos=1
     ):

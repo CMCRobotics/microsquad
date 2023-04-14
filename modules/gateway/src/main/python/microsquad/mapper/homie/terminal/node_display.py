@@ -18,7 +18,7 @@ class NodeDisplay(Node_Base):
     ):
       super().__init__(device, id, name, type_, retain, qos)
 
-      self.add_property(Property_String(self, id="contents", name="contents", settable=False))
-      self.add_property(Property_Dimmer(self, id="luminosity", name="luminosity", settable=False))
+      self.add_property(Property_String(self, id="contents", name="Contents", settable=False))
+      self.add_property(Property_Dimmer(self, id="luminosity", name="Luminosity", settable=False))
       
 

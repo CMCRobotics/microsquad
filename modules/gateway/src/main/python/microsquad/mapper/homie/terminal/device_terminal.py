@@ -13,7 +13,7 @@ from ....event import EventType,MicroSquadEvent
 from .node_accelerator import NodeAccelerator
 from .node_button import NodeButton
 from .node_display import NodeDisplay
-from .node_temperature import NodeTemperature
+from .node_environment import NodeEnvironment
 from .node_vote import NodeVote
 from .node_info import NodeInfo
 
@@ -28,7 +28,7 @@ class DeviceTerminal(Device_Base):
         self.add_node(NodeButton(self,id="button-a",name="Button A"))
         self.add_node(NodeButton(self,id="button-b",name="Button B"))
         self.add_node(NodeDisplay(self))
-        self.add_node(NodeTemperature(self))
+        self.add_node(NodeEnvironment(self))
         self.add_node(NodeVote(self))
         self.add_node(NodeInfo(self, command_handler= self.update_command))
 

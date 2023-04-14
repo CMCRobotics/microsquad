@@ -1,6 +1,5 @@
 import logging
 
-from homie.node.property.property_string import Property_String
 from homie.node.property.property_datetime import Property_DateTime
 from homie.node.property.property_integer import Property_Integer
 from homie.node.node_base import Node_Base

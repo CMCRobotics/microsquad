@@ -89,7 +89,7 @@ class HomieMapper(AbstractMapper):
                     _add_properties_to_tags(vote_node,["last"],tags)
                     self.event_source.on_next(MicroSquadEvent(EventType.VOTE,dev_id,tags.copy()))
                 elif verb == EventType.TEMPERATURE.value:
-                    terminal.get_node("temperature").get_property("temperature").value=int(tags["value"])
+                    terminal.get_node("environment").get_property("temperature").value=int(tags["value"])
                     self.event_source.on_next(MicroSquadEvent(EventType.TEMPERATURE,dev_id,tags.copy()))
         except:
              logging.exception("Unexpected error on line message : %s",message)
