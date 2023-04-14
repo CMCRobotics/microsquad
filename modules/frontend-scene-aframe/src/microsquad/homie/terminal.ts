@@ -20,7 +20,7 @@ export class DeviceTerminal extends HomieDevice{
     buttonBNode?: HomieNode;
     acceleratorNode?: HomieNode;
     displayNode?: HomieNode;
-    temperatureNode?: HomieNode;
+    environmentNode?: HomieNode;
     voteNode?: HomieNode;
     infoNode?: HomieNode;
 
@@ -31,7 +31,7 @@ export class DeviceTerminal extends HomieDevice{
         this.buttonANode = this.add(new NodeButton(this, { id: 'button-a', name: 'Button A' }));
         this.buttonBNode = this.add(new NodeButton(this, { id: 'button-b', name: 'Button B' }));
         this.acceleratorNode = this.add(new NodeAccelerator(this, {id: 'accel', name:'Accelerator'}));
-        this.temperatureNode = this.add(new NodeTemperature(this, {id: 'temperature', name:'Temperature'}))
+        this.environmentNode = this.add(new NodeEnvironment(this, {id: 'environment', name:'Environment'}))
         this.displayNode = this.add(new NodeDisplay(this, {id: 'display', name:'Display'}))
         this.infoNode = this.add(new NodeInfo(this, {id: 'info', name:'Info'}))
         this.voteNode = this.add(new NodeVote(this, {id: 'vote', name:'Vote'}))
@@ -110,9 +110,9 @@ class NodeVote extends HomieNode{
       }
 }
 
-class NodeTemperature extends HomieNode{
-    constructor(device: HomieDevice, attrs: HomieNodeAtrributes, unit = "C"){
-        attrs.type="temperature";
+class NodeEnvironment extends HomieNode{
+    constructor(device: HomieDevice, attrs: HomieNodeAtrributes, unit = "°C"){
+        attrs.type="environment";
         super(device,attrs);
         this.add(new HomieProperty(this, {id: "temperature"  , name:"Temperature", unit: unit, datatype: HOMIE_TYPE_FLOAT}))
       }
