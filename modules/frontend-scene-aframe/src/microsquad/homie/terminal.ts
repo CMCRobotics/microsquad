@@ -14,8 +14,6 @@ import { MicroSquadEvent, ofProperty } from "../event";
  */
 export class DeviceTerminal extends HomieDevice{
     
-    eventSource?: Observer<MicroSquadEvent>;
-
     buttonANode?: HomieNode;
     buttonBNode?: HomieNode;
     acceleratorNode?: HomieNode;
@@ -26,32 +24,15 @@ export class DeviceTerminal extends HomieDevice{
 
     deviceManager = new HomieDeviceManager();
 
-    constructor(attrs: HomieDeviceAtrributes, mqttOptions: MQTTConnectOpts | RxMqtt, mode?: HomieDeviceMode | undefined, eventSource?: Observer<MicroSquadEvent>){
+    constructor(attrs: HomieDeviceAtrributes, mqttOptions: MQTTConnectOpts | RxMqtt, mode?: HomieDeviceMode | undefined){
         super(attrs, mqttOptions, mode);
         this.buttonANode = this.add(new NodeButton(this, { id: 'button-a', name: 'Button A' }));
         this.buttonBNode = this.add(new NodeButton(this, { id: 'button-b', name: 'Button B' }));
         this.acceleratorNode = this.add(new NodeAccelerator(this, {id: 'accel', name:'Accelerator'}));
-        this.environmentNode = this.add(new NodeEnvironment(this, {id: 'environment', name:'Environment'}))
-        this.displayNode = this.add(new NodeDisplay(this, {id: 'display', name:'Display'}))
-        this.infoNode = this.add(new NodeInfo(this, {id: 'info', name:'Info'}))
-        this.voteNode = this.add(new NodeVote(this, {id: 'vote', name:'Vote'}))
-
-        if(eventSource){
-            this.eventSource = eventSource
-        }
-
-        let that = this;
-        if(this.infoNode.get("command")){
-            let commandProp = this.infoNode.get("command")!;
-            commandProp.onSetMessage$.pipe(
-                takeUntil(commandProp.onDestroy$)
-            ).subscribe({
-                next: event => {
-                    // Emit a microsquad event to report a terminal command was issued to this terminal
-                    that.eventSource?.next(ofProperty('terminal_command', event.property));
-                }
-            }); 
-        }       
+        this.environmentNode = this.add(new NodeEnvironment(this, {id: 'environment', name:'Environment'}));
+        this.displayNode = this.add(new NodeDisplay(this, {id: 'display', name:'Display'}));
+        this.infoNode = this.add(new NodeInfo(this, {id: 'info', name:'Info'}));
+        this.voteNode = this.add(new NodeVote(this, {id: 'vote', name:'Vote'}));
     }
 }
 
