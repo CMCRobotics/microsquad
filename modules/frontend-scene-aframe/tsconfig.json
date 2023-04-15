@@ -7,7 +7,7 @@
     "noImplicitAny": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "node-homie"]
+    "types": ["node", "node-homie", "jest", "aedes"]
   },
   "include": ["src/**/*", "bin/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
