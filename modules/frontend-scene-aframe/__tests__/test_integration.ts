@@ -4,6 +4,10 @@ import { createServer, Server } from 'aedes-server-factory'
 
 import { AddressInfo } from 'net';
 
+import {DeviceGateway} from '../src/microsquad/homie/gateway';
+import { HomieDeviceManager } from 'node-homie';
+
+
 
 describe('MQTT integration test', () => {
   let server: Server;
@@ -19,7 +23,6 @@ describe('MQTT integration test', () => {
         console.log(`now on port ${port}`)
         done()
     });
-    // done()
   });
 
   afterAll((done) => {
@@ -28,22 +31,21 @@ describe('MQTT integration test', () => {
     aedes.close(done)
   });
 
-  it.skip('should receive a message published to a topic', (done) => {
-    // Connect a client to the Aedes server
-    const client = connect(`mqtt://localhost:${port}`);
-
-    // Subscribe to a topic
-    client.subscribe('test/topic', () => {
-      // Publish a message to the topic
-      client.publish('test/topic', 'Hello, world!');
-
-      // Wait for the message to be received
-      client.on('message', (topic, payload) => {
-        expect(topic).toEqual('test/topic');
-        expect(payload.toString()).toEqual('Hello, world!');
-        client.end(done());
-      });
+  it('should declare a gateway and two terminals', (done) => {
+    let gatewayDevice = new DeviceGateway({ id: 'gateway', name: 'MicroSquad Gateway' }, {
+        url: `mqtt://localhost:${port}`,
+        topicRoot: 'microsquad' 
     });
 
-  });
+    // let deviceManager = new HomieDeviceManager()
+    
+    // const client = connect(`mqtt://localhost:${port}`);
+
+    // client.publish('microsquad/gateway/', 'Hello, world!');
+
+    // Perform various checks
+
+    
+   });
+
 });
