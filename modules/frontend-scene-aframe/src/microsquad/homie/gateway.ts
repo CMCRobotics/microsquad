@@ -1,6 +1,8 @@
 import { HomieDevice, HomieNode, HomieProperty } from "node-homie";
 import { HOMIE_TYPE_STRING, HomieDeviceAtrributes, HomieDeviceMode, MQTTConnectOpts } from "node-homie/model";
 import { RxMqtt } from "node-homie/mqtt";
+import { Observer } from "rxjs";
+import { MicroSquadEvent } from "../event";
 
 /**
  * A Homie Device class for the MicroSquad Gateway.
@@ -17,6 +19,7 @@ export class DeviceGateway extends HomieDevice{
 
     scoreboardNode?: HomieNode;
     gameNode?: HomieNode;
+    eventSource: Observer<MicroSquadEvent> | undefined;
 
     constructor(attrs: HomieDeviceAtrributes, mqttOptions: MQTTConnectOpts | RxMqtt, mode?: HomieDeviceMode | undefined){
         super(attrs, mqttOptions, mode);
