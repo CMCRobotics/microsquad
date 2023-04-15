@@ -14,10 +14,10 @@ import { GameEventTypeEnum, MicroSquadEvent, MicroSquadEventType } from "./event
  *   * regroup players into teams based in specific sorting criterias.
  */
 export class GameManager {
-    private eventSource: Observable<MicroSquadEvent<MicroSquadEventType>>
+    private eventSource: Observable<MicroSquadEvent>
     private deviceGateway: DeviceGateway
 
-    constructor(eventSource: Observable<MicroSquadEvent<MicroSquadEventType>>, deviceGateway: DeviceGateway) {
+    constructor(eventSource: Observable<MicroSquadEvent>, deviceGateway: DeviceGateway) {
         this.eventSource = eventSource;
         this.deviceGateway = deviceGateway;
 
@@ -30,7 +30,7 @@ export class GameManager {
         return this.deviceGateway
     }
     
-    public handleGameEvent(event: MicroSquadEvent<MicroSquadEventType>):void{
+    public handleGameEvent(event: MicroSquadEvent):void{
         switch(event.type){
             case "game_start":
                 // Initiate a new game controller matching the game name
