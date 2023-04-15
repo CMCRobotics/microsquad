@@ -42,8 +42,9 @@ export function ofDevice(type: MicroSquadEventType, device: HomieDevice, payload
  */
 export class MicroSquadEvent {
     constructor(
-        type: MicroSquadEventType,
-        deviceId: string, nodeId?: string,
-        propertyId?: string,
-        payload?: any) { }
+        public type: MicroSquadEventType,
+        public deviceId: string, 
+        public nodeId?: string,
+        public propertyId?: string,
+        public payload?: any) { }
 }
