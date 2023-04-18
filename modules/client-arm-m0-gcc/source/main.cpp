@@ -11,6 +11,8 @@
 
 MicroBit    uBit;
 
+// Radio message buffer
+char message_buffer[256];
 
 struct LineProtocolRecord {
     char* measurement;        // Name of the measurement
@@ -23,7 +25,7 @@ struct LineProtocolRecord {
 
 
 
-void parse_line_protocol(const char* input, LineProtocolRecord& output) {
+void lp_parse(const char* input, LineProtocolRecord& output) {
     // Parse the input string and extract the measurement, tags, fields, and timestamp
     char measurement[256];
     char tags[1024];
@@ -71,33 +73,124 @@ void parse_line_protocol(const char* input, LineProtocolRecord& output) {
     output.timestamp = timestamp / 1000;
 }
 
+char* lp_get_tag(LineProtocolRecord& record, const char* tag_name) {
+    // Find the position of the field name in the fields string
+    char* tag_pos = strstr(record.tags, tag_name);
+    
+    if (tag_pos == NULL) {
+        // Tag name not found
+        return NULL;
+    }
+    
+    // Check if the next character after the tag name is the equals sign
+    if (*(tag_pos + strlen(tag_name)) != '=') {
+        // Tag name is part of a tag value
+        return NULL;
+    }
+    
+    // Find the position of the field value after the equals sign
+    char* value_pos = tag_pos + strlen(tag_name) + 1;
+    
+    // Find the position of the next comma or the end of the fields string
+    char* next_pos = strchr(value_pos, ',');
+    if (next_pos == NULL) {
+        next_pos = record.tags + strlen(record.tags);
+    }
+    
+    // Allocate memory for the tag value and copy it from the tags string
+    char* value = new char[next_pos - value_pos + 1];
+    strncpy(value, value_pos, next_pos - value_pos);
+    value[next_pos - value_pos] = '\0';
+    
+    return value;
+}
+
+float lp_get_field(LineProtocolRecord& record, const char* field_name) {
+    // Find the position of the field name in the fields string
+    char* field_pos = strstr(record.fields, field_name);
+    
+    if (field_pos == NULL) {
+        // Field name not found
+        return NAN;
+    }
+    
+    // Find the position of the field value after the field name
+    char* value_pos = strchr(field_pos, '=') + 1;
+    
+    // Find the position of the next comma or the end of the fields string
+    char* next_pos = strchr(value_pos, ',');
+    if (next_pos == NULL) {
+        next_pos = record.fields + strlen(record.fields);
+    }
+    
+    // Allocate memory for the field value and copy it from the fields string
+    char* value = new char[next_pos - value_pos + 1];
+    strncpy(value, value_pos, next_pos - value_pos);
+    value[next_pos - value_pos] = '\0';
+    
+    // Convert the value to a float and return it
+    float field_value = atof(value);
+    
+    delete[] value;
+    
+    return field_value;
+}
+
+// Event handler for incoming radio messages
+void onRadioDatagramReceived(MicroBitEvent) {
+    // Receive the radio message
+    uBit.radio.datagram.recv(message_buffer, sizeof(message_buffer));
+    
+    // Parse the message into a LineProtocolRecord
+    record = parseLineProtocolRecord(message_buffer);
+    
+    // Signal to the main loop that a new message has been received
+    new_message_received = true;
+}
+
+// int main() {
+//     // Initialize the MicroBit
+//     uBit.init();
+    
+//     // Enable the radio
+//     uBit.radio.enable();
+    
+//     // Register the event handler for incoming radio messages
+//     uBit.messageBus.listen(MICROBIT_ID_RADIO, MICROBIT_RADIO_EVT_DATAGRAM, onRadioDatagramReceived);
+    
+    
+//     // We should never get here, but just in case...
+//     return 0;
+// }
 
 int main()
 {
     // Initialise the micro:bit runtime.
     uBit.init();
-    // uBit.radio.enable();
+    uBit.radio.enable();
+    uBit.messageBus.listen(MICROBIT_ID_RADIO, MICROBIT_RADIO_EVT_DATAGRAM, onRadioDatagramReceived);
+    
+    while (1) {
+        // Check if a new message has been received
+        if (new_message_received) {
+            // Print the values of the fields in the record
+            // printFields(record);
+            
+            // Reset the flag
+            new_message_received = false;
+        }
+        
+        // Yield to other fibers
+        fiber_sleep(1);
+    }
 
-    // while(1)
-    // {
-    //     if (uBit.buttonA.isPressed())
-    //         uBit.radio.datagram.send("1");
-
-    //     else if (uBit.buttonB.isPressed())
-    //         uBit.radio.datagram.send("2");
-
-    //     uBit.sleep(100);
-    // }
-
-    struct LineProtocolRecord lpr;
-    parse_line_protocol("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
-
-    ManagedString meas("Measure :");
-    ManagedString m(lpr.measurement);
-    meas = meas + m;
-    uBit.display.scroll(meas);
-    release_fiber();
-
+//      struct LineProtocolRecord lpr;
+//      lp_parse("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
+// // 
+//     ManagedString meas("Measure :");
+//     ManagedString m(lpr.measurement);
+//     meas = meas + m;
+//     uBit.display.scroll(meas);
 }
 
 
