@@ -76,7 +76,7 @@ int main()
 {
     // Initialise the micro:bit runtime.
     uBit.init();
-    uBit.radio.enable();
+    // uBit.radio.enable();
 
     // while(1)
     // {
@@ -89,13 +89,15 @@ int main()
     //     uBit.sleep(100);
     // }
 
-    // struct LineProtocolRecord lpr;
-    // parse_line_protocol("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
-// 
+    struct LineProtocolRecord lpr;
+    parse_line_protocol("VOTE,option1=A,option2=B index=0 1465839830100400200", lpr);
+
     ManagedString meas("Measure :");
-    // ManagedString m(lpr.measurement);
-    // meas = meas + m;
+    ManagedString m(lpr.measurement);
+    meas = meas + m;
     uBit.display.scroll(meas);
+    release_fiber();
+
 }
 
 
