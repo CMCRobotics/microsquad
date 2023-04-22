@@ -9,7 +9,7 @@
     "serve": "five-server",
     "bundle": "webpack --config webpack.config.cjs",
     "webpack": "webpack --config webpack.config.cjs --watch",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles --silent=false --verbose=true"
   },
   "bin": {
     "setup-devices": "./bin/setup-devices.ts"
