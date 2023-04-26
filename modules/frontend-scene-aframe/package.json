@@ -9,7 +9,7 @@
     "serve": "five-server",
     "bundle": "webpack --config webpack.config.cjs",
     "webpack": "webpack --config webpack.config.cjs --watch",
-    "test": "jest --detectOpenHandles --silent=false --verbose=true"
+    "test": "jest --detectOpenHandles"
   },
   "bin": {
     "setup-devices": "./bin/setup-devices.ts"
@@ -24,6 +24,7 @@
     "aframe-htmlembed-component": "^1.0.0",
     "aframe-label": "^0.1.0",
     "aframe-layout-component": "^5.3.0",
+    "async-mqtt": "^2.6.3",
     "jssm": "^5.88.4",
     "node-homie": "^0.9.24"
   },
