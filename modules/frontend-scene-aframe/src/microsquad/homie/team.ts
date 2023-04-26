@@ -1,15 +1,11 @@
-// 
-// 
-// 
-// 
-// 
-// 
-// 
-
 import { HomieDevice, HomieNode, HomieProperty } from "node-homie";
 import { HOMIE_TYPE_COLOR, HOMIE_TYPE_STRING, HomieNodeAtrributes } from "node-homie/model";
 
-
+/**
+ * A Homie Node class for the MicroSquad teams.
+ * 
+ * @see MicroSquadEvent
+ */
 export class NodeTeam extends HomieNode {
     constructor(device: HomieDevice, attrs: HomieNodeAtrributes) {
         attrs.type = "team";
