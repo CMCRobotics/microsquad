@@ -1,8 +1,7 @@
-import { HomieDevice, HomieDeviceManager, HomieNode, HomieProperty } from "node-homie";
+import { HomieDevice, HomieNode, HomieProperty } from "node-homie";
 import { HOMIE_TYPE_DATETIME, HOMIE_TYPE_FLOAT, HOMIE_TYPE_INT, HOMIE_TYPE_STRING, HomieDeviceAtrributes, HomieDeviceMode, HomieNodeAtrributes, MQTTConnectOpts, notNullish } from "node-homie/model";
 import { RxMqtt } from "node-homie/mqtt";
-import { Observer, takeUntil } from "rxjs";
-import { MicroSquadEvent, ofProperty } from "../event";
+import assert from "node:assert";
 
 /**
  * A Homie Device class for a MicroSquad Terminal.
@@ -22,9 +21,8 @@ export class DeviceTerminal extends HomieDevice{
     voteNode?: HomieNode;
     infoNode?: HomieNode;
 
-    deviceManager = new HomieDeviceManager();
-
     constructor(attrs: HomieDeviceAtrributes, mqttOptions: MQTTConnectOpts | RxMqtt, mode?: HomieDeviceMode | undefined){
+        assert(attrs.id.startsWith('terminal-'), "Terminal device id must imperatively start with 'terminal-'");
         super(attrs, mqttOptions, mode);
         this.buttonANode = this.add(new NodeButton(this, { id: 'button-a', name: 'Button A' }));
         this.buttonBNode = this.add(new NodeButton(this, { id: 'button-b', name: 'Button B' }));

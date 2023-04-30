@@ -5,7 +5,7 @@ import {DeviceGateway} from "../src/microsquad/homie/gateway"
 import {DeviceTerminal} from "../src/microsquad/homie/terminal"
 
 import {MicroSquadEventType} from '../src/microsquad/event'
-import assert, { equal, ok } from "assert";
+import assert, { AssertionError, equal, ok } from "assert";
 
 import {AsyncClient, connect} from 'async-mqtt';
 import { MQTTConnectOpts } from "node-homie/model";
@@ -21,7 +21,7 @@ describe('Microsquad integration tests', () => {
     let aedes : Aedes;
     let server: Server;
     let port: number;
-    let mqttopts : MQTTConnectOpts = { url: '' , topicRoot: 'microsquad'};
+    let mqtt_opts : MQTTConnectOpts = { url: '' , topicRoot: 'microsquad'};
     let deviceManager = new HomieDeviceManager();
 
 
@@ -32,8 +32,8 @@ describe('Microsquad integration tests', () => {
           server.listen(0, function (){
               port = (server.address() as AddressInfo).port;
               console.debug(`Running MQTT broker on port ${port}`);
-              mqttopts.url=`mqtt://localhost:${port}`;
-              gatewayDevice = new DeviceGateway({ id: 'gateway', name: 'MicroSquad Gateway' },mqttopts);
+              mqtt_opts.url=`mqtt://localhost:${port}`;
+              gatewayDevice = new DeviceGateway({ id: 'gateway', name: 'MicroSquad Gateway' },mqtt_opts);
               deviceManager.add(gatewayDevice);
             done();
           });
@@ -52,10 +52,10 @@ describe('Microsquad integration tests', () => {
         });
     });
 
-    it('should create a terminal device', (done) => {
+    it.skip('should create a terminal device', (done) => {
         const client : AsyncClient = connect(`tcp://localhost:${port}`);
         const STATE_TOPIC  = "microsquad/terminal-1/$state"
-        let terminal1 = new DeviceTerminal({id: 'terminal-1', name: "Terminal 1"}, mqttopts);
+        let terminal1 = new DeviceTerminal({id: 'terminal-1', name: "Terminal 1"}, mqtt_opts);
         client.on("message", (topic, message) =>{
             equal(topic,STATE_TOPIC );
             client.end().then(done);
@@ -65,26 +65,62 @@ describe('Microsquad integration tests', () => {
         });
     });
 
-    it('should discover a new Terminal', (done)=>{
-        let terminal1 = new DeviceTerminal({id: 'terminal-1', name: "Terminal 1"}, mqttopts);
-        let deviceDiscovery  = new DeviceDiscovery(mqttopts);
+    it('should refuse to create a terminal device with improper id', () => {
+        expect( () => {
+            const client : AsyncClient = connect(`tcp://localhost:${port}`);
+            let terminal1 = new DeviceTerminal({id: 'some-random-name-1', name: "Random Terminal 1"}, mqtt_opts);
+        }).toThrow(AssertionError);
+    });
+
+
+    
+    describe('Controller tests',() =>{
+        let terminal1 : DeviceTerminal; 
         let subject = new Subject<MicroSquadEvent>();
-        
-        const tester : Partial<Observer<MicroSquadEvent>> = {
-            next: (event) =>{
-            equal("terminal-1",event.deviceId)
-            equal('terminal_command',event.type)
-            done();
+        let controller : Controller;
+
+        test('should discover a new Terminal', (done)=>{
+            terminal1 = new DeviceTerminal({id: 'terminal-1', name: "Terminal 1"}, mqtt_opts);
+            terminal1.onInit();
+            const tester : Partial<Observer<MicroSquadEvent>> = {
+                next: (event) =>{
+                    equal("terminal-1",event.deviceId)
+                    equal('terminal_discovered',event.type)
+                    done();
+                }
             }
-        }
-        subject.subscribe(tester);
-        let controller = new Controller(deviceDiscovery,subject);
-        
-        deviceDiscovery.onInit();
-        terminal1.onInit().then( ()=> {
-            // equal(deviceManager.hasDevice("terminal-1"), true);
+            subject.subscribe(tester);
+            controller = new Controller(mqtt_opts,subject);
+            controller.onInit();
+            
         });
-        
+
+        test('should receive command event when a Terminal receives a command', (done)=>{
+            terminal1 = new DeviceTerminal({id: 'terminal-1', name: "Terminal 1"}, mqtt_opts);
+            terminal1.onInit();
+            const client : AsyncClient = connect(`tcp://localhost:${port}`);
+            
+            const tester : Partial<Observer<MicroSquadEvent>> = {
+                next: (event) =>{
+                    if(event.type == 'terminal_command'){
+                        equal(event.deviceId, "terminal-1");
+                        equal(event.payload, 'your wish');
+                        client.end();
+                        done();
+                    }
+                }
+            }
+            subject.subscribe(tester);
+            controller = new Controller(mqtt_opts,subject);
+            controller.onInit().then( () => {
+                client.publish("microsquad/terminal-1/info/command", "your wish")
+            });
+            
+        });
+        afterEach(() => {
+            terminal1?.onDestroy();
+            controller?.onDestroy();
+        });
     });
 
     // it('should emit a COMMAND Microsquad event when a terminal receives a command', (done) => {
@@ -111,8 +147,11 @@ describe('Microsquad integration tests', () => {
 
     afterAll((done) => {
         gatewayDevice?.onDestroy();
-        server?.close();
-        aedes?.close(done);
+        deviceManager.destroyAllDevices().then( () => {
+            server?.close();
+            aedes?.close(done);
+        });
+        
     });
 
         

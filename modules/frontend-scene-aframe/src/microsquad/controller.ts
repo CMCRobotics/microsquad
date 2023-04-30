@@ -1,9 +1,9 @@
-import { Observer, Observable, Subject, takeUntil, map, filter, distinctUntilChanged } from "rxjs";
+import { Observer, Subject, takeUntil, map, filter, distinctUntilChanged, Observable } from "rxjs";
 
 import { MicroSquadEvent, MicroSquadEventType, ofNode, ofProperty } from "./event";
 import { DeviceDiscovery, DiscoveryEvent, HomieDevice, HomieDeviceManager, HomieProperty } from "node-homie";
-import { notNullish } from 'node-homie/model'
-import { SimpleLogger } from 'node-homie/misc';
+import { MQTTConnectOpts, notNullish } from 'node-homie/model'
+import { LifecycleBase, SimpleLogger } from 'node-homie/misc';
 import { watchList } from 'node-homie/rx';
 
 /**
@@ -13,46 +13,75 @@ import { watchList } from 'node-homie/rx';
  * @see MicroSquadEvent
  * @see Observer
  */
-export class Controller{
+export class Controller extends LifecycleBase{
     eventSource?: Observer<MicroSquadEvent>;
     deviceDiscovery: DeviceDiscovery;
     deviceManager: HomieDeviceManager;
-    onDestroy$ = new Subject<boolean>();
+    mqtt_opts : MQTTConnectOpts;
+    onDestroySubj$ = new Subject<boolean>();
     readonly log: SimpleLogger;
 
-    discoveryObserver : Partial<Observer<DiscoveryEvent>> = {
-        next: (event) => { 
-            switch(event.type){
+    private readonly discoveryEventHandler: Partial<Observer<DiscoveryEvent>> | undefined = {
+        next: event => {
+            // Handle device addition and removal first
+            switch (event.type) {
+                case "add":
+                    if (!this.deviceManager.hasDevice(event.deviceId)) {
+                        const newDevice = this.deviceManager.add(event.makeDevice());
+                        this.log.warn(`Added device ${newDevice.id} to device manager`);
+                    }
+                    break;
+                case "remove":
+                    const device = this.deviceManager.removeDevice(event.deviceId);
+                    if (device) {
+                        device.onDestroy();
+                        this.log.debug(`Removed device ${device.id} from device manager`);
+                    }
+                    break;
+            }
+            // Emit any higher-level Microsquad event  as required
+            switch (event.type) {
                 case "add":
                 case "remove":
-                    let device : HomieDevice | undefined = this.deviceManager.getDevice(event.deviceId);
-                    if(device?.attributes.name?.startsWith("terminal-")){
-                        this.log.debug(event.type.toUpperCase+' Terminal device '+event.deviceId);
-                        this.eventSource?.next(new MicroSquadEvent((event.type==='add'?'terminal_discovered':'terminal_removed'),event.deviceId));
+                    let device: HomieDevice | undefined = this.deviceManager.getDevice(event.deviceId);
+
+                    if (device?.id.startsWith("terminal-")) {
+                        this.log.debug(`${event.type} Terminal device ${event.deviceId}`);
+                        this.eventSource?.next(new MicroSquadEvent((event.type === 'add' ? 'terminal_discovered' : 'terminal_removed'), event.deviceId));
                     }
                     break;
                 case "error":
-                    this.log.error('Device discovery error : '+event.error);
+                    this.log.error('Device discovery error : ' + event.error);
                     break;
             }
-
         }
-    }
-    
+    };
 
-    constructor(deviceDiscovery: DeviceDiscovery, eventSource?: Observer<MicroSquadEvent>){
+    constructor(mqtt_opts: MQTTConnectOpts, eventSource?: Observer<MicroSquadEvent>){
+        super();
+        this.mqtt_opts = mqtt_opts;
         this.eventSource = eventSource;
-
-        this.deviceDiscovery = deviceDiscovery;
-        this.deviceDiscovery.events$.pipe(takeUntil(this.onDestroy$))
-                                    .subscribe(this.discoveryObserver);
-
         this.deviceManager = new HomieDeviceManager();
 
-        this.registerGameDiscoveryQuery();
-        this.registerPlayerDiscoveryQuery();
+        this.deviceDiscovery = new DeviceDiscovery(this.mqtt_opts);
+        // this.deviceDiscovery.events$.pipe(takeUntil(super._onDestroy$))
+        this.deviceDiscovery.events$.pipe(takeUntil(this.onDestroySubj$))
+                                    .subscribe(this.discoveryEventHandler);
+                                    
+                                    
+        // this.registerGameDiscoveryQuery();
+        // this.registerPlayerDiscoveryQuery();
         this.registerTerminalCommandQuery();
         this.log = new SimpleLogger(this.constructor.name, "controller", "microsquad" );
+    }
+    onInit(): Promise<void> {
+        return this.deviceDiscovery.onInit();
+    }
+
+    onDestroy(): Promise<void> {
+        this.onDestroySubj$.next(true);
+        this.deviceDiscovery.onDestroy();
+        return super.onDestroy();
     }
 
     private registerGameDiscoveryQuery() {
@@ -102,11 +131,11 @@ export class Controller{
             node: { type: 'info' }, property: { name: 'command' }
         }).pipe(
             takeUntil(this.onDestroy$)
-            ,map((props: HomieProperty[]) => props.filter((prop: HomieProperty) => prop.device.id.startsWith('terminal-')))
-            ,filter(props => props.length > 0)
-            ,watchList(prop => prop.value$.pipe(
-                filter(notNullish),
-                distinctUntilChanged()))
+            // ,map((props: HomieProperty[]) => props.filter((prop: HomieProperty) => prop.device.id.startsWith('terminal-')))
+            // ,filter(props => props.length > 0)
+            // ,watchList(prop => prop.value$.pipe(
+            //     filter(notNullish),
+            //     distinctUntilChanged()))
         ).subscribe({
             next: propertyList => {
                 propertyList.forEach(prop => {
