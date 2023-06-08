@@ -4,7 +4,7 @@
   "description": "Mobile User interface based on AFrame for MicroSquad",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npm serve",
+    "start": "npm run serve",
     "build": "npm run bundle",
     "serve": "five-server",
     "bundle": "webpack --config webpack.config.cjs",
@@ -14,13 +14,19 @@
   "author": "",
   "license": "GPLv3",
   "dependencies": {
+    "@babel/helper-validator-identifier": "^7.19.1",
     "aframe": "^1.4.1",
     "aframe-extras": "^6.1.1",
     "aframe-htmlembed-component": "^1.0.0",
-    "aframe-label": "^0.1.0"
+    "aframe-label": "^0.1.0",
+    "css-select": "^5.1.0",
+    "mime-db": "^1.52.0",
+    "negotiator": "^0.6.3",
+    "picomatch": "^2.3.1"
   },
   "devDependencies": {
     "@types/aframe": "^1.2.2",
+    "@types/node": "^20.2.5",
     "@types/three": "^0.147.1",
     "clean-webpack-plugin": "^3.0.0",
     "dotenv-webpack": "^6.0.4",
