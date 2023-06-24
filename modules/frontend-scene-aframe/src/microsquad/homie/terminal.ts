@@ -74,8 +74,8 @@ class NodeInfo extends HomieNode{
         this.add(new HomieProperty(this, {id: "terminal-id"  , name:"Terminal ID", datatype: HOMIE_TYPE_STRING}))
         this.add(new HomieProperty(this, {id: "serial-number", name:"Serial Number", datatype: HOMIE_TYPE_STRING}))
         this.add(new HomieProperty(this, {id: "heartbeat"    , name:"Heartbeat", datatype: HOMIE_TYPE_DATETIME}))
-        const commandProp = this.add(new HomieProperty(this, {id: "command"      , name:"Command", datatype: HOMIE_TYPE_STRING, settable:true, retained: false}))
-        commandProp.value = "";
+        const commandProp = this.add(new HomieProperty(this, {id: "command"      , name:"Command", datatype: HOMIE_TYPE_STRING, settable:true, retained: true}))
+        commandProp.value = "none";
       }
 }
 
