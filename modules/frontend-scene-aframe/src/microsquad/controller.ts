@@ -1,11 +1,10 @@
-import { Observer, Subject, takeUntil, map, filter, distinctUntilChanged, Observable } from "rxjs";
+import { Observer, Subject, takeUntil, map, filter, distinctUntilChanged, switchMap, combineLatest } from "rxjs";
 
 import { MicroSquadEvent, MicroSquadEventType, ofNode, ofProperty } from "./event";
 import { DeviceDiscovery, DiscoveryEvent, HomieDevice, HomieDeviceManager, HomieProperty } from "node-homie";
 import { MQTTConnectOpts, notNullish } from 'node-homie/model'
 import { LifecycleBase, SimpleLogger } from 'node-homie/misc';
-import { watchList } from 'node-homie/rx';
-
+import { mandatorySwitchMap, optionalSwitchMap, watchList } from "node-homie/rx";
 /**
  * A Controller instance watching Homie discovery or update events and transforms them
  * to higher-level order events (MicroSquadEvent), to forward them to the given Observer.
@@ -29,6 +28,7 @@ export class Controller extends LifecycleBase{
                     if (!this.deviceManager.hasDevice(event.deviceId)) {
                         const newDevice = this.deviceManager.add(event.makeDevice());
                         this.log.warn(`Added device ${newDevice.id} to device manager`);
+                        newDevice.onInit();
                     }
                     break;
                 case "remove":
@@ -64,13 +64,12 @@ export class Controller extends LifecycleBase{
         this.deviceManager = new HomieDeviceManager();
 
         this.deviceDiscovery = new DeviceDiscovery(this.mqtt_opts);
-        // this.deviceDiscovery.events$.pipe(takeUntil(super._onDestroy$))
         this.deviceDiscovery.events$.pipe(takeUntil(this.onDestroySubj$))
                                     .subscribe(this.discoveryEventHandler);
                                     
                                     
         // this.registerGameDiscoveryQuery();
-        // this.registerPlayerDiscoveryQuery();
+        this.registerPlayerDiscoveryQuery();
         this.registerTerminalCommandQuery();
         this.log = new SimpleLogger(this.constructor.name, "controller", "microsquad" );
     }
@@ -81,41 +80,49 @@ export class Controller extends LifecycleBase{
     onDestroy(): Promise<void> {
         this.onDestroySubj$.next(true);
         this.deviceDiscovery.onDestroy();
+        this.onDestroySubj$.complete();
         return super.onDestroy();
     }
 
-    private registerGameDiscoveryQuery() {
-        this.deviceManager.query({ node: { id: 'game' }, property: { name: 'name' } }).pipe(
-             takeUntil(this.onDestroy$)
-            ,filter(props => props.length > 0)
-            ,watchList(prop => prop.value$.pipe(
-                filter(notNullish),
-                distinctUntilChanged()
-            ))).subscribe({
-                next: propertyList => {
-                    propertyList.forEach(p => {
-                        let verb = 'discovered'
-                        if(p.value == undefined || p.value == ''){
-                            verb = 'removed'
-                        }
-                        if(p.value){
-                          this.log.debug(p.value?.toUpperCase+' game '+verb);
-                        } 
-                        this.eventSource?.next(ofProperty(('game_'+verb as MicroSquadEventType), p));
-                    });
-                }
-            });
-    }
+    // private registerGameDiscoveryQuery() {
+    //     this.deviceManager.query({ node: { id: 'game' }, property: { name: 'name' } }).pipe(
+    //          takeUntil(this.onDestroy$)
+    //         ,filter(props => props.length > 0)
+    //         ,watchList(prop => prop.value$.pipe(
+    //             filter(notNullish),
+    //             distinctUntilChanged()
+    //         ))).subscribe({
+    //             next: propertyList => {
+    //                 propertyList.forEach(p => {
+    //                     let verb = 'discovered'
+    //                     if(p.value == undefined || p.value == ''){
+    //                         verb = 'removed'
+    //                     }
+    //                     if(p.value){
+    //                       this.log.debug(p.value?.toUpperCase+' game '+verb);
+    //                     } 
+    //                     this.eventSource?.next(ofProperty(('game_'+verb as MicroSquadEventType), p));
+    //                 });
+    //             }
+    //         });
+    // }
 
     private registerPlayerDiscoveryQuery() {
         this.deviceManager.query({
             node: { type: 'player' }, property: { name: 'terminal-id' }
         }).pipe(
-            takeUntil(this.onDestroy$)
-            , filter(props => props.length > 0)
-            , watchList(prop => prop.value$.pipe(
-                filter(notNullish),
-                distinctUntilChanged()))
+            takeUntil(this.onDestroy$),
+            filter(props => props.length > 0),
+            switchMap(props =>
+                combineLatest(
+                    props.map(prop =>
+                        prop.value$.pipe(
+                            filter(notNullish),
+                            distinctUntilChanged(),
+                            map(value => prop))
+                    )
+                )
+            )
         ).subscribe({
             next: propertyList => {
                 propertyList.forEach(playerId => {
@@ -128,21 +135,27 @@ export class Controller extends LifecycleBase{
 
     private registerTerminalCommandQuery() {
         this.deviceManager.query({
-            node: { type: 'info' }, property: { name: 'command' }
+            node: { id: 'info' }, property: { id: 'command' }
         }).pipe(
-            takeUntil(this.onDestroy$)
-            // ,map((props: HomieProperty[]) => props.filter((prop: HomieProperty) => prop.device.id.startsWith('terminal-')))
-            // ,filter(props => props.length > 0)
-            // ,watchList(prop => prop.value$.pipe(
-            //     filter(notNullish),
-            //     distinctUntilChanged()))
+            takeUntil(this.onDestroy$),
+            filter(props => props.length > 0),
+            switchMap(props =>
+                combineLatest(
+                    props.map(prop =>
+                        prop.value$.pipe(
+                            filter(notNullish),
+                            distinctUntilChanged(),
+                            map(value => prop))
+                    )
+                )
+            )
         ).subscribe({
-            next: propertyList => {
-                propertyList.forEach(prop => {
-                    this.log.debug(`Terminal ${prop.device.id} received command ${prop.value}`);
-                    this.eventSource?.next(ofProperty('terminal_command', prop));
+            next: proplist => {
+                proplist.forEach(prop => {
+                    this.log.debug('CONTROLLER RECEIVED Property update: '+ prop?.pointer+ ' - '+prop?.value);
+                    this.eventSource?.next(ofProperty('terminal_command', prop, prop.value));
                 });
             }
-        })
+        });
     }
 }
