@@ -1,25 +1,43 @@
 <html>
-  <head>
-    <script src="./bundle.js"></script>
-  </head>
-  <body>
-    <script>
 
-      
-      
-    </script>
-    
-    <a-scene>
-      <a-assets>
-        <a-asset-item id="microbit-asset" src="assets/microbit.glb"></a-asset-item>
-        <a-asset-item id="cover-asset" src="assets/cover.glb"></a-asset-item>
-      </a-assets>
-      <!--  -->
-      <a-entity id="microbit" position="-4.23 0.2 3.76" scale="0.06 0.06 0.06" gltf-model="#microbit-asset"></a-entity>
-      <a-entity id="cover" position="-4.23 0.2 3.65" scale="0.06 0.06 0.06" gltf-model="#cover-asset"></a-entity>
-      <a-camera position="0 1.6 0" wasd-controls fit="#plane"></a-camera>
-      <a-sky color="#ECECEC"></a-sky>
-      <a-entity environment=" preset: forest"></a-entity>
-    </a-scene>
-    
-  </body>
+<head>
+  <script src="./bundle.js"></script>
+</head>
+
+<body>
+
+  <a-scene>
+    <a-assets>
+      <a-asset-item id="microbit-asset" src="assets/microbit.glb"></a-asset-item>
+      <a-asset-item id="cover-asset" src="assets/cover.glb"></a-asset-item>
+      <a-asset-item id="joystick" src="assets/arcade_stick/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-entity light="type: hemisphere; color: #FFF; intensity: 0.65" position="0 100 1"></a-entity>
+    <a-entity id="joystick" gltf-model="#joystick" position="0 1.57 -0.15" scale="0.09 0.09 0.09"
+      rotation="0 270 280"></a-entity>
+
+    <!-- <a-entity id="microbit" position="-4.23 0.2 3.76" scale="0.06 0.06 0.06" gltf-model="#microbit-asset"></a-entity> -->
+    <!-- <a-entity id="cover" position="-4.23 0.2 3.65" scale="0.06 0.06 0.06" gltf-model="#cover-asset"></a-entity> -->
+    <!-- <a-camera position="0 1.8 0" wasd-controls fit="#joystick"></a-camera> -->
+    <a-entity environment=" preset: forest"></a-entity>
+  </a-scene>
+
+  <!-- <a-scene renderer="antialias: true;
+    colorManagement: true;
+    sortObjects: true;
+    physicallyCorrectLights: true;">
+    <a-entity environment=" preset: forest"></a-entity>
+    <a-assets>
+      <a-asset-item id="joystick" src="assets/joystick/scene.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-entity id="rig" position="25 2 0">
+      <a-entity id="camera" camera look-controls>
+        <a-entity light="type: hemisphere; color: #FFF; intensity: 1" position="0 2 0"></a-entity>
+
+        <a-gltf-model src="#joystick" scale="0.15 0.15 0.15" position="0 0 -3" rotation="90 0 0"></a-gltf-model>
+      </a-entity>
+    </a-entity>
+  </a-scene> -->
+</body>
