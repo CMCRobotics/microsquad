@@ -3,8 +3,6 @@ require('aframe-extras')
 require('aframe-htmlembed-component')
 require('three')
 require('aframe-environment-component')
-require('aframe-animation-component')
-require('aframe-animation-timeline-component')
 
 import { Group, Box3, Vector3, PerspectiveCamera} from "three";
 
