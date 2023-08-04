@@ -13,8 +13,8 @@
       <a-asset-item id="joystick" src="assets/arcade_stick/scene.gltf"></a-asset-item>
 
       <a-mixin id="buttonclick"
-        animation__buttonup="property: position; from: -1 0.5 -3; to: -1 0.5 -2; startEvents: click, animationcomplete__buttondown; dur: 500"
-        animation__buttondown="property: position; from: -1 0.5 -2; to: -1 0.5 -3; startEvents: animationcomplete__buttonup; dur: 500"></a-mixin>
+        animation__buttonup="property: position; from: 0 0 0; to: 0 0 1; startEvents: click; dur: 100"
+        animation__buttondown="property: position; from: 0 0 1; to: 0 0 0; startEvents: animationcomplete__buttonup; dur: 100"></a-mixin>
     </a-assets>
 
     <!-- <a-entity light="type: hemisphere; color: #FFF; intensity: 1" position="0 100 1"></a-entity> -->
@@ -33,10 +33,11 @@
 
     <!-- <a-circle radius="1" position="-1 0.5 -3" mixin="buttonclick" class="action-button"></a-circle> -->
 
-    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: #joystick"></a-entity>
+    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: #box"></a-entity>
 
-    <!-- <a-sphere id="box" material="color: red" position="-1 0.5 -3" rotation="0 30 0" mixin="buttonclick"> -->
-    </a-sphere>
+    <a-entity material="color: red" position="-1 0.5 -3" rotation="0 30 0">
+      <a-entity id="box" mixin="buttonclick" geometry="primitive: sphere" color="blue"></a-entity>
+    </a-entity>
   </a-scene>
 
 
