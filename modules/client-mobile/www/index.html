@@ -13,31 +13,24 @@
       <a-asset-item id="joystick" src="assets/arcade_stick/scene.gltf"></a-asset-item>
 
       <a-mixin id="buttonclick"
-        animation__buttonup="property: position; from: 0 0 0; to: 0 0 1; startEvents: click; dur: 100"
-        animation__buttondown="property: position; from: 0 0 1; to: 0 0 0; startEvents: animationcomplete__buttonup; dur: 100"></a-mixin>
+        animation__buttonup="property: position; from: 0 0 0; to: 0 0 0.01; startEvents: click; dur: 100"
+        animation__buttondown="property: position; from: 0 0 0.01; to: 0 0 0; startEvents: animationcomplete__buttonup; dur: 100"></a-mixin>
     </a-assets>
 
-    <!-- <a-entity light="type: hemisphere; color: #FFF; intensity: 1" position="0 100 1"></a-entity> -->
-    <a-camera position=" 0 1.8 0.05" wasd-controls fit="#joystick"></a-camera>
-
-    <!-- <a-box position="-1 0.5 -3" rotation="0 0 0" color="#4CC3D9" width="3" depth="0.25"></a-box> -->
-
-    <a-entity id="joystick" gltf-model="#joystick" position="0 1.80 -0.12" scale="0.09 0.09 0.09" rotation="0 270 270"
-      mixin="buttonclick"></a-entity>
-
-    <!-- <a-circle color="#9141ac" radius="0.004" position="-0.002 1.797 0"></a-circle>
-    <a-sphere color="#4CC3D9" radius="0.002" position="-0.002 1.797 0.01">
-      <a-entity mixin="buttonclick"></a-entity>
-      </a-circle>
-    </a-sphere> -->
-
-    <!-- <a-circle radius="1" position="-1 0.5 -3" mixin="buttonclick" class="action-button"></a-circle> -->
-
+    <a-entity light="type: hemisphere; color: #FFF; intensity: 0.5" position="0 100 1"></a-entity>
+    <a-camera position="0 1 1" wasd-controls fit="#joystick"></a-camera>
     <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: #box"></a-entity>
 
-    <a-entity material="color: red" position="-1 0.5 -3" rotation="0 30 0">
-      <a-entity id="box" mixin="buttonclick" geometry="primitive: sphere" color="blue"></a-entity>
+
+    <a-entity gltf-model="#joystick" id="joystick" position="0 1 0.75" scale="0.15 0.15 0.15" rotation="0 270 270"
+      mixin="buttonclick"></a-entity>
+
+    <!-- Joystick buttons -->
+    <a-entity position="-0.013 0.986 0.798" rotation="0 30 0">
+      <a-sphere id="box" mixin="buttonclick" radius="0.019" geometry="primitive: sphere" color="blue"></a-sphere>
     </a-entity>
+
+
   </a-scene>
 
 
