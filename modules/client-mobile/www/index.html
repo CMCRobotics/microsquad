@@ -6,7 +6,7 @@
 
 <body>
 
-  <a-scene environment=" preset: forest">
+  <a-scene environment="preset: forest">
     <a-assets>
       <a-asset-item id="microbit-asset" src="assets/microbit.glb"></a-asset-item>
       <a-asset-item id="cover-asset" src="assets/cover.glb"></a-asset-item>
@@ -19,7 +19,7 @@
 
     <a-entity light="type: hemisphere; color: #FFF; intensity: 0.5" position="0 100 1"></a-entity>
     <a-camera position="0 1 1" wasd-controls fit="#joystick"></a-camera>
-    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: #buttons"></a-entity>
+    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .joystick-button"></a-entity>
 
 
     <a-entity gltf-model="#joystick" id="joystick" position="0 1 0.75" scale="0.15 0.15 0.15" rotation="0 270 270"
@@ -27,23 +27,38 @@
 
     <!-- Joystick buttons -->
     <a-entity position="-0.013 0.986 0.798" rotation="0 30 0">
-      <a-sphere id="buttons" mixin="buttonclick" radius="0.019" geometry="primitive: sphere" color="blue"></a-sphere>
+      <a-sphere id="change-environment" class="joystick-button" mixin="buttonclick" radius="0.019"
+        geometry="primitive: sphere" color="blue"></a-sphere>
     </a-entity>
 
     <a-entity position="0.016 1.012 0.798" rotation="0 30 0">
-      <a-sphere id="buttons" mixin="buttonclick" radius="0.019" geometry="primitive: sphere" color="orange"></a-sphere>
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="orange"></a-sphere>
     </a-entity>
 
     <a-entity position="0.051 1.017 0.798" rotation="0 30 0">
-      <a-sphere id="buttons" mixin="buttonclick" radius="0.019" geometry="primitive: sphere" color="green"></a-sphere>
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="green"></a-sphere>
     </a-entity>
 
     <a-entity position="0.084 1.006 0.810" rotation="0 30 0">
-      <a-sphere id="buttons" mixin="buttonclick" radius="0.019" geometry="primitive: sphere" color="purple"></a-sphere>
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="purple"></a-sphere>
     </a-entity>
-
-
   </a-scene>
 
+  <script>
+    const allEnvironments = ['forest', 'egypt', 'checkerboard', 'goaland', 'yavapai', 'goldmine', 'threetowers', 'poison', 'arches', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris', 'moon']
+    let currentEnvironmentIndex = 0;
+
+    const changeEnvironmentButton = document.getElementById('change-environment');
+
+    changeEnvironmentButton.addEventListener('click', () => {
+      const scene = document.querySelector('a-scene');
+      const nextEnvironmentIndex = (currentEnvironmentIndex + 1) % (allEnvironments.length);
+      scene.setAttribute('environment', `preset: ${allEnvironments[nextEnvironmentIndex]}`);
+      currentEnvironmentIndex = nextEnvironmentIndex;
+    });
+  </script>
 
 </body>

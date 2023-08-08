@@ -29,4 +29,8 @@ AFRAME.registerComponent("fit", {
         this.el.sceneEl.camera.zoom = distance / newDistance;
       }
     }
-  });
+});
+  
+function changeEnvironment() {
+  console.log("FROM INDEX")
+}
