@@ -1,27 +1,64 @@
 <html>
-  <head>
-    <script src="./bundle.js"></script>
-  </head>
-  <body>
-    <script>
 
-      
-      
-    </script>
-    
-    <a-scene>
-      <a-assets>
-        <a-asset-item id="microbit-asset" src="assets/microbit.glb"></a-asset-item>
-        <a-asset-item id="cover-asset" src="assets/cover.glb"></a-asset-item>
-      </a-assets>
-      <!--  -->
-      <a-plane id="plane" position="0 1.6 -2" color="#CCCCC" height="3.2" width="20">
-      </a-plane>
-      <a-entity id="microbit" position="-4.23 0.2 3.76" scale="0.06 0.06 0.06" gltf-model="#microbit-asset"></a-entity>
-      <a-entity id="cover" position="-4.23 0.2 3.65" scale="0.06 0.06 0.06" gltf-model="#cover-asset"></a-entity>
-      <a-camera position="0 1.6 0" wasd-controls fit="#plane"></a-camera>
-      <a-sky color="#ECECEC"></a-sky>
-      
-    </a-scene>
-    
-  </body>
+<head>
+  <script src="./bundle.js"></script>
+</head>
+
+<body>
+
+  <a-scene environment="preset: forest">
+    <a-assets>
+      <a-asset-item id="microbit-asset" src="assets/microbit.glb"></a-asset-item>
+      <a-asset-item id="cover-asset" src="assets/cover.glb"></a-asset-item>
+      <a-asset-item id="joystick" src="assets/arcade_stick/scene.gltf"></a-asset-item>
+
+      <a-mixin id="buttonclick"
+        animation__buttonup="property: position; from: 0 0 0; to: 0 0 -0.01; startEvents: click; dur: 100"
+        animation__buttondown="property: position; from: 0 0 -0.01; to: 0 0 0; startEvents: animationcomplete__buttonup; dur: 100"></a-mixin>
+    </a-assets>
+
+    <a-entity light="type: hemisphere; color: #FFF; intensity: 0.5" position="0 100 1"></a-entity>
+    <a-camera position="0 1 1" wasd-controls fit="#joystick"></a-camera>
+    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .joystick-button"></a-entity>
+
+
+    <a-entity gltf-model="#joystick" id="joystick" position="0 1 0.75" scale="0.15 0.15 0.15" rotation="0 270 270"
+      mixin="buttonclick"></a-entity>
+
+    <!-- Joystick buttons -->
+    <a-entity position="-0.013 0.986 0.798" rotation="0 30 0">
+      <a-sphere id="change-environment" class="joystick-button" mixin="buttonclick" radius="0.019"
+        geometry="primitive: sphere" color="blue"></a-sphere>
+    </a-entity>
+
+    <a-entity position="0.016 1.012 0.798" rotation="0 30 0">
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="orange"></a-sphere>
+    </a-entity>
+
+    <a-entity position="0.051 1.017 0.798" rotation="0 30 0">
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="green"></a-sphere>
+    </a-entity>
+
+    <a-entity position="0.084 1.006 0.810" rotation="0 30 0">
+      <a-sphere class="joystick-button" mixin="buttonclick" radius="0.019" geometry="primitive: sphere"
+        color="purple"></a-sphere>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    const allEnvironments = ['forest', 'egypt', 'checkerboard', 'goaland', 'yavapai', 'goldmine', 'threetowers', 'poison', 'arches', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris', 'moon']
+    let currentEnvironmentIndex = 0;
+
+    const changeEnvironmentButton = document.getElementById('change-environment');
+
+    changeEnvironmentButton.addEventListener('click', () => {
+      const scene = document.querySelector('a-scene');
+      const nextEnvironmentIndex = (currentEnvironmentIndex + 1) % (allEnvironments.length);
+      scene.setAttribute('environment', `preset: ${allEnvironments[nextEnvironmentIndex]}`);
+      currentEnvironmentIndex = nextEnvironmentIndex;
+    });
+  </script>
+
+</body>
